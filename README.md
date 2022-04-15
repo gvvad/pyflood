@@ -3,7 +3,8 @@ Script for generating network traffic.
 
 ## Usage:
 ```shell
-main.py [-h] [-host HOST] [-cfg CONFIG] [-m {dns,http,rhttp,rshttp,tcp,udp}] [-t THREADS] [-url URL] [-norcv]
+main.py [-h] [-host HOST] [-cfg CONFIG] [-m {udp,tcp,dns,http,httpr}]
+        [-t THREADS] [-url URL] [-norcv]
         [-msg MESSAGE] [-thr THROTTLE] [-timeout TIMEOUT] [-proxy PROXY] [-rpc RPC]
         [-cookie COOKIE] [-useragent USERAGENT]
 ```
@@ -25,15 +26,15 @@ Object that redefine parameters. `Jobs` - parameters-array per job.
   "ParamNameA": "String value A: {ParamNameB}",
   "ParamNameB": ["String value AA", "String value BB"],
   "ParamNameC": 4,
-  ...
+  "..."
   "Jobs": [
     {
       "ParamNameA": "String value B: {ParamNameB}", 
       "ParamNameB": ["String value AAA", "String value BBB"],
       "ParamNameC": 8,
-      ...
+      "..."
     },
-    ...
+    "..."
   ]
 }
 ```
