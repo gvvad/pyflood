@@ -1,0 +1,21 @@
+{
+  "UserAgent": [
+    "Mozilla/5.0 ({WinVer}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{ChromeVer} Safari/537.36",
+    "Mozilla/5.0 ({WinVer}; rv:{FFoxVer}) Gecko/20100101 Firefox/{FFoxVer}"
+  ],
+  "WinVer": [
+    "Windows NT 10.0; Win64; x64",
+    "Windows NT 11.0; Win64; x64"
+  ],
+  "ChromeVer": [
+    "99.0.4844.74",
+    "98.0.4758.120",
+    "97.0.4692.90",
+    "96.0.4664.70"
+  ],
+  "FFoxVer": [
+    "98.0",
+    "97.0",
+    "96.0"
+  ]
+}
