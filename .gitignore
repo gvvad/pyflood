@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# User configuration files in root dir
+/*.json
+
+# IDEs
+.idea
+.vscode
