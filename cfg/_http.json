@@ -1,3 +1,3 @@
 {
-  "Message": "GET {Path} HTTP/1.1\r\nUser-Agent: {UserAgent}\r\nHost: {Host}\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\nAccept-Language: en-us\r\nAccept-Encoding: gzip, deflate\r\nConnection: Keep-Alive\r\nCache-Control: no-cache\r\nPragma: no-cache\r\nUpgrade-Insecure-Requests: 1{CookieSub}\r\n\r\n"
+  "Message": "GET {Path} HTTP/1.1\r\nUser-Agent: {UserAgent}\r\nHost: {Host}\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\nAccept-Language: en-US,en;q=0.9\r\nAccept-Encoding: gzip, deflate, br\r\nConnection: keep-alive\r\nCache-Control: no-cache\r\nPragma: no-cache\r\nUpgrade-Insecure-Requests: 1{CookieSub}\r\n\r\n"
 }
