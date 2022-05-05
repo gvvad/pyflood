@@ -11,6 +11,8 @@ from tool import string_render
 from importlib import import_module
 import re
 import string
+import gzip
+import zlib
 
 RND_RE = re.compile("RndStr([0-9]+)")
 
@@ -108,9 +110,16 @@ class ReceiveThread(Thread):
     @staticmethod
     def decode_bytes(buf: bytes, trunc=32):
         try:
-            s = buf[:trunc].decode().split("\n")[0].strip()
-            return f"[Received {len(buf)} bytes: {s}...]"
-        except UnicodeDecodeError:
+            _b = buf
+            if _b[:2] == b'\x1F\x8B':
+                _b = gzip.decompress(_b)
+            
+            if _b[:2] == b'\x78\x9C' or _b[:2] == b'\x78\x01' or _b[:2] == b'\x78\xDA':
+                _b = zlib.decompress(_b)
+                
+            s = _b[:trunc].decode().split("\n")[0].strip()
+            return f"[Received {len(_b)} bytes: {s}...]"
+        except (UnicodeDecodeError, gzip.BadGzipFile, zlib.error):
             return f"[Can't decode {len(buf)} bytes.]"
 
     @property
