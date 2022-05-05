@@ -51,11 +51,9 @@ def job_factory(params: dict) -> list:
     hosts_obj = []
 
     if params.get("Host") is None:
-        try:
-            url = urlparse(params.get("Url") or "/")
-            params["Host"] = url.netloc
-        except (KeyError, ValueError):
-            return []
+        params["Host"] = urlparse(params.get("Url")).netloc
+        if not params.get("Host"):
+            raise ValueError("Host/Url fetch error.")
 
     # Define host as [{'Host': 'value', 'Port': 123}, ...] object array
     if type(params.get("Host")) is list:
@@ -67,9 +65,8 @@ def job_factory(params: dict) -> list:
     jobs = []
     for obj in hosts_obj:
         threads = []
-        for i in range(0, params["Threads"]):
+        for _ in range(0, params["Threads"]):
             t = method_module.Method({**params, **obj})
-            t.start()
             threads.append(t)
         jobs.append({"name": f"{threads[0].params['Host']}:{threads[0].params['Port']}", "threads": threads})
 
@@ -84,7 +81,7 @@ if __name__ == '__main__':
                         help="Config json file. Default '_<method>.json'.")
     parser.add_argument("-m", "--Method", type=str, choices=method_names, default="tcp",
                         help="Flood method|protocol")
-    parser.add_argument("-t", "--Threads", type=int, default=4,
+    parser.add_argument("-t", "--Threads", type=int, default=1,
                         help="Thread count.")
     parser.add_argument("-url", "--Url", type=str,
                         help="Http url request [http[s]://<host>]/<path>")
@@ -135,20 +132,26 @@ if __name__ == '__main__':
 
             params.update(param_obj)
 
-            for j in j_list:
+            for job in j_list:
                 new_params = params.copy()
-                new_params.update(j)
+                new_params.update(job)
                 jobs += job_factory(new_params)
 
     if not jobs:
-        jobs += job_factory(params)
-
-    if len(jobs) == 0:
-        parser.print_help()
-        exit(0)
+        try:
+            jobs += job_factory(params)
+        except ValueError as e:
+            print(e)
+            parser.print_help()
+            exit(0)
+    
+    for job in jobs:
+        for t in job["threads"]:
+            t.start()
 
     try:
         while True:
+            a_log = []
             for job in jobs:
                 total_send = 0
                 send_rate = 0
@@ -174,13 +177,13 @@ if __name__ == '__main__':
                         e = thread.last_error
 
                 e = e or ""
-                print("{}\tx{} TX:{} {}/s | {:.1f}kr {:.2f}r/s\tRX:{} F:{} {}".format(
+                a_log.append("{}\tx{} TX:{} {}/s | {:.1f}kr {:.2f}r/s\tRX:{} F:{} {}".format(
                     f"[{job['threads'][0].__module__.split('.')[-1]}]{job['name']}", len(job["threads"]),
                     humanize_bytes(total_send), humanize_bytes(send_rate), send_count/1000, send_count_rate,
                     humanize_bytes(total_received),
-                    total_failed_count, e)
-                )
-
+                    total_failed_count, e))
+            
+            print("\n".join(a_log))
             sleep(2)
 
     except KeyboardInterrupt:

@@ -32,11 +32,11 @@ class Method(BaseMethod):
                     s = context.wrap_socket(s, server_hostname=self.params["Host"])
                 self.put_to_receive_queue(s)
 
-                data = self.params["Message"].encode(encoding="raw_unicode_escape")
                 for _ in range(0, rpc):
                     if self.is_terminate:
                         break
                     self.throttle()
+                    data = self.params["Message"].encode(encoding="raw_unicode_escape")
 
                     self.send_to_socket(s, data)
                 s.shutdown(SHUT_WR)
